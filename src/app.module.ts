@@ -5,6 +5,9 @@ import { AppService } from './app.service';
 import { PerfilModule } from './perfil/perfil.module';
 import { UsuarioModule } from './usuario/usuario.module';
 import { ProdutoMoule } from './produto/produto.module';
+import { CategoriaModule } from './categoria/categoria.module';
+import { SubcategoriaModule } from './subcategoria/subcategoria.module';
+import { CompraMoule } from './compra/compra.module';
 
 @Module({
   imports: [
@@ -20,8 +23,11 @@ import { ProdutoMoule } from './produto/produto.module';
       //synchronize: true,
       logging: 'all',
     }),
+    CategoriaModule,
+    CompraMoule,
     PerfilModule,
     ProdutoMoule,
+    SubcategoriaModule,
     UsuarioModule
   ],
 
@@ -29,4 +35,4 @@ import { ProdutoMoule } from './produto/produto.module';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule { }

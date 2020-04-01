@@ -11,13 +11,13 @@ export class UsuarioController {
   @Get('/')
   @ApiQuery({ name: 'nome', required: false })
   @ApiQuery({ name: 'cpf', required: false})
-  async getUsuarios(@Query('nome')  nome : string, @Query('cpf') cpf) {
-    return await this.usuarioService.getUsuarios(nome, cpf);
+  async getUsuarios(@Query('nome')  nome : string, @Query('cpf') cpf : string) {
+    return await this.usuarioService.getUsuarios({nome : nome, cpf : cpf});
   }
 
   @Get('/:id')
   @ApiParam({ name: 'id', required: true })
-  getUsuario(@Param('id') id) {
+  getUsuario(@Param('id') id :number) {
     return this.usuarioService.getUsuario(id);
   }
 

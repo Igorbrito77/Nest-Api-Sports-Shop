@@ -12,31 +12,39 @@ export class UsuarioService {
     @InjectRepository(Usuario) private readonly usuarioRepository : Repository<Usuario>
   ) {}
 
+  retorna_filtragem(filtro){
 
-  async getUsuarios(nome : string, cpf : string) {
+      let where = [];
+      let parametros = {};
 
-    let filtro = [];
-    let parametros = {};
+
+      if(filtro.nome){
+        where.push(`usuario.nome ilike :nome `);
+        parametros['nome'] = `%${filtro.nome}%`;
+      }
+      
+      if(filtro.cpf){
+        where.push('usuario.cpf = :cpf');
+        parametros['cpf'] = filtro.cpf;
+      }
+
+      return {filtro_completo : where.join(" AND "), parametros : parametros };
+
+  }
+
+
+  async getUsuarios(filtros : Object) {
+
+ 
+    const {filtro_completo, parametros} = this.retorna_filtragem(filtros);
     
-    if(nome){
-      filtro.push(`usuario.nome ilike :nome `);
-      parametros['nome'] = `%${nome}%`;
-    }
-    
-    if(cpf){
-      filtro.push('usuario.cpf = :cpf');
-      parametros['cpf'] = cpf;
-    }
-
-    filtro.join(' AND ');
-    console.log(filtro);
-
     const query =   this.usuarioRepository.createQueryBuilder('usuario')
                                               .innerJoinAndSelect('usuario.perfil', 'perfil')
                                               .innerJoinAndSelect('usuario.endereco', 'endereco')
-                                              .select(' usuario.id, usuario.nome, perfil.nome AS perfil, usuario.cpf, endereco.*')
+                                              .select(` usuario.id, usuario.nome, perfil.nome AS perfil, usuario.cpf,                                               
+                                                        endereco.cidade, endereco.estado`)                                                       
                                               .orderBy('usuario.id', 'DESC')
-                                              .where(filtro.toString(), parametros);
+                                              .where(filtro_completo , parametros);
                                               
     const dados = await query.getRawMany();
     const total = await query.getCount();
@@ -46,8 +54,11 @@ export class UsuarioService {
   }
 
   async getUsuario(id: number){
-    return await this.usuarioRepository.findOneOrFail(id);
+    console.log(id);
+    return await this.usuarioRepository.findOne(id);
   }
+
+
 
   @Transaction()
   async create(usuarioBody,

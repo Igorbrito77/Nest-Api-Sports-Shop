@@ -12,8 +12,20 @@ export class ProdutoController {
     }
 
     @Get('/')
-    async getProdutos(){
-        return await this.produtoService.getProdutos();
+
+    @ApiQuery({name: 'preco_minimo', required : false})
+    @ApiQuery({name: 'preco_maximo', required : false})
+    @ApiQuery({name : 'nome', required : false})
+    async getProdutos(@Query('nome') nome, @Query('preco_minimo') preco_minimo, @Query('preco_maximo') preco_maximo){
+        return await this.produtoService.getProdutos({nome : nome, preco_minimo : preco_minimo, preco_maximo : preco_maximo});
+    }
+
+    @Get('/:id')
+
+
+    @ApiParam({name : 'id', required : true})
+    async getProduto(@Param('id') id){
+        return await this.produtoService.getProduto(id);
     }
 
 }
