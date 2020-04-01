@@ -48,6 +48,11 @@ export class ProdutoService {
                                             .getRawMany();
     } 
 
+    async getProduto(id : number){
+
+        return await this.produtoRepository.findOne(id);
+    }
+
 }
 
  

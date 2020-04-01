@@ -41,7 +41,8 @@ export class UsuarioService {
     const query =   this.usuarioRepository.createQueryBuilder('usuario')
                                               .innerJoinAndSelect('usuario.perfil', 'perfil')
                                               .innerJoinAndSelect('usuario.endereco', 'endereco')
-                                              .select(' usuario.id, usuario.nome, perfil.nome AS perfil, usuario.cpf, endereco.*')
+                                              .select(` usuario.id, usuario.nome, perfil.nome AS perfil, usuario.cpf,                                               
+                                                        endereco.cidade, endereco.estado`)                                                       
                                               .orderBy('usuario.id', 'DESC')
                                               .where(filtro_completo , parametros);
                                               
@@ -53,8 +54,19 @@ export class UsuarioService {
   }
 
   async getUsuario(id: number){
-    return await this.usuarioRepository.findOneOrFail(id);
+    console.log(id);
+    return await this.usuarioRepository.findOne(id);
   }
+
+    
+  async getCompraUsuario(id : number){
+
+    
+
+  }
+
+
+
 
   @Transaction()
   async create(usuarioBody,

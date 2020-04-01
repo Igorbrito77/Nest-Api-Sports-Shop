@@ -17,7 +17,7 @@ export class UsuarioController {
 
   @Get('/:id')
   @ApiParam({ name: 'id', required: true })
-  getUsuario(@Param('id') id) {
+  getUsuario(@Param('id') id :number) {
     return this.usuarioService.getUsuario(id);
   }
 
@@ -32,6 +32,13 @@ export class UsuarioController {
   @ApiParam({ name: 'flag', required: true})
   async desativaUsuario(@Param('id') id, @Param('flag')flag : boolean){
       return await this.usuarioService.desativa.apply(this.usuarioService, [id, flag]);
+  }
+
+
+  @Get('/:id/compra')
+  @ApiParam({ name: 'id', required: true })
+  getCompraUsuario(@Param('id') id :number) {
+    return this.usuarioService.getUsuario(id);
   }
 
 }
