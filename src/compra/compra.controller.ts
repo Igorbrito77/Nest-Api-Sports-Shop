@@ -1,5 +1,5 @@
-import { Controller, Get } from "@nestjs/common";
-import { ApiTags } from "@nestjs/swagger";
+import { Controller, Get, Header, Param, Headers } from "@nestjs/common";
+import { ApiTags, ApiHeader } from "@nestjs/swagger";
 import { CompraService } from "./compra.service";
 
 @Controller('compra')
@@ -12,8 +12,16 @@ export class CompraController{
     }
 
     @Get('/')
-    async listCompras(){
-        return await this.compraService.listCompra();
+
+    @ApiHeader({
+        name: 'usuario_id',
+        description: 'Id do usuário logado',
+        required: true
+      })
+
+    async listCompras(@Headers('usuario_id') usuario_id){
+        console.log(usuario_id)
+        return await this.compraService.listCompra(usuario_id);
     }
 
 }

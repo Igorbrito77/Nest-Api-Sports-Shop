@@ -34,11 +34,4 @@ export class UsuarioController {
       return await this.usuarioService.desativa.apply(this.usuarioService, [id, flag]);
   }
 
-
-  @Get('/:id/compra')
-  @ApiParam({ name: 'id', required: true })
-  getCompraUsuario(@Param('id') id :number) {
-    return this.usuarioService.getUsuario(id);
-  }
-
 }

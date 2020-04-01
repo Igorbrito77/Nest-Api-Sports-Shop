@@ -58,14 +58,6 @@ export class UsuarioService {
     return await this.usuarioRepository.findOne(id);
   }
 
-    
-  async getCompraUsuario(id : number){
-
-    
-
-  }
-
-
 
 
   @Transaction()
