@@ -27,4 +27,9 @@ export class CompraService{
     }
 
 
+    async createCompra(compraBody){
+      
+    }
+
+
 }
