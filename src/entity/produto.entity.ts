@@ -1,6 +1,7 @@
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from 'typeorm';
 import { Usuario } from './usuario.entity';
 import { CompraProduto } from './compra_produto.entity';
+import { Subcategoria } from './subcategoria.entity';
 
 @Entity({ name: 'produto', schema: 'public' })
 export class Produto {
@@ -10,8 +11,8 @@ export class Produto {
     @Column({nullable: false,length: 50 })
     nome: string;
 
-    @Column({length : 20})
-    preco : string
+    @Column()
+    preco : number
 
     @Column()
     subcategoria_id : number
@@ -32,8 +33,12 @@ export class Produto {
     @JoinColumn({ name: 'usuario_id' })
     usuario: Usuario;
 
-    @ManyToOne(type => CompraProduto, compra_produto => compra_produto.produto)
-    compra_produto: CompraProduto;
+    @ManyToOne(type => Subcategoria, subcategoria => subcategoria.id)
+    @JoinColumn({ name: 'subcategoria_id' })
+    subcategoria: Subcategoria;
+
+   //  @ManyToOne(type => CompraProduto, compra_produto => compra_produto.produto)
+   //  compra_produto: CompraProduto;
 
     /**
      * 

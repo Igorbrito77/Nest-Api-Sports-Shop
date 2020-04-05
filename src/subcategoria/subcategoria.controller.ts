@@ -1,6 +1,7 @@
 import { Controller, Get, Param, Post, Body, Patch, Query } from '@nestjs/common';
 import { ApiTags , ApiParam, ApiProperty, ApiQuery} from '@nestjs/swagger';
 import { SubcategoriaService } from './subcategoria.service';
+import { CadastroSubcategoriaDto } from './CadastroSubcategoria.dto';
 
 
 @Controller('subcategoria')
@@ -12,11 +13,14 @@ export class SubcategoriaController {
     }
 
     @Get('/')
-  //  @ApiQuery({name: 'preco_minimo', required : false})
-    //@ApiQuery({name: 'preco_maximo', required : false})
     @ApiQuery({name : 'nome', required : false})
     async getCategorias(@Query('nome') nome){
         return await this.subcategoriaService.list();
+    }
+
+    @Post('/')
+    async cadastrarSubcategoria(@Body() cadastroSubcategoriaDto : CadastroSubcategoriaDto){
+      return await this.subcategoriaService.create.apply(this.subcategoriaService, [cadastroSubcategoriaDto]);
     }
 
     // @Get('/:id')

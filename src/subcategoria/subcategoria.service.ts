@@ -15,10 +15,28 @@ export class SubcategoriaService {
 
 
     async list(){
-        return await this.subcategoriaRepository.find();
+   
+        return await this.subcategoriaRepository.createQueryBuilder('subcategoria')
+                                                .select('subcategoria.id, subcategoria.nome, categoria.nome as categoria')
+                                                .leftJoin('subcategoria.categoria', 'categoria')
+                                                .getRawMany();
     } 
 
-  
+    @Transaction()
+    async create(subcategoriaBody, @TransactionManager() manager: EntityManager, 
+                                   @TransactionRepository(Categoria) categoriaRepository : Repository<Categoria>){
+
+        const categoria = await categoriaRepository.findOne(subcategoriaBody.categoria_id);
+
+       if(!categoria){
+          throw new NotFoundException({mensagem : `categoria_id ${subcategoriaBody.categoria_id} inválido.`});
+       }
+
+        const subcategoria = await manager.save(new Subcategoria(subcategoriaBody));
+
+        return subcategoria;
+
+    }
 
 }
 

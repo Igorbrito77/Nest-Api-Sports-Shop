@@ -22,8 +22,3 @@ export class Categoria {
     }
 }
 
-/**
- * id integer NOT NULL DEFAULT nextval('categoria_id_seq'::regclass),
-  nome character varying(80) NOT NULL,
-  descricao character varying(255),
- */

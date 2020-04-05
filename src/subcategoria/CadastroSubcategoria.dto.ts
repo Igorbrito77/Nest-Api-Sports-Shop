@@ -2,20 +2,19 @@ import { IsString, Allow, ValidateNested, IsObject, IsNumber, IsArray } from 'cl
 import { ApiProperty } from '@nestjs/swagger';
 
 
-class Item {
+
+export class CadastroSubcategoriaDto{
    
     @ApiProperty({required : true})
     @IsNumber()
-    readonly produto_id : number
+    readonly categoria_id : number
 
     @ApiProperty({required : true})
+    @IsString()
+    readonly nome : string
+
+    @ApiProperty({required : false})
     @IsNumber()
-    readonly quantidade : number
-
-}
-
-export class CadastroCompraDto{
-
-    @ApiProperty({ isArray: true, type: Item }) readonly items: Item[]
+    readonly descricao : string
 
 }
