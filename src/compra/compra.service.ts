@@ -19,7 +19,7 @@ export class CompraService{
 
 
         return await this.compraRepository.createQueryBuilder('compra')
-        .select(`compra.id, compra.codigo, compra.data, compra.finalizada,
+        .select(`compra.id, compra.codigo, compra.data, compra.finalizada, SUM(produto.preco) as valor_total,
                 array_agg(json_build_object('preco', produto.preco , 'quantidade', compra_produto.quantidade, 
                     'produto', produto.nome )) AS itens`)
                                             .innerJoin('compra.compras_produto', 'compra_produto')   
@@ -93,7 +93,7 @@ export class CompraService{
     
         await this.compraRepository.save(compra);
 
-        return 'Compra finalizada com sucesso.'
+        return 'Compra finalizada com sucesso.';
         
     }
 
