@@ -1,7 +1,12 @@
-import { Injectable } from "@nestjs/common";
-import { Repository } from "typeorm";
+import { Injectable, NotFoundException } from "@nestjs/common";
+import { Repository, TransactionRepository, Transaction, TransactionManager, EntityManager } from "typeorm";
 import { Compra } from "src/entity/compra.entity";
+import { Usuario } from "src/entity/usuario.entity";
 import { InjectRepository } from "@nestjs/typeorm";
+import { Produto } from "src/entity/produto.entity";
+import { CompraProduto } from "src/entity/compra_produto.entity";
+
+const crypto = require('crypto');
 
 @Injectable()
 export class CompraService{
@@ -12,7 +17,6 @@ export class CompraService{
 
     async listCompra(usuario_id){
 
-        console.log(usuario_id);
 
         return await this.compraRepository.createQueryBuilder('compra')
         .select(`compra.id, compra.codigo, compra.data, compra.finalizada,
@@ -27,8 +31,51 @@ export class CompraService{
     }
 
 
-    async createCompra(compraBody){
+    @Transaction()
+    async createCompra(usuario_id, compraBody, @TransactionManager() manager: EntityManager, 
+                                                @TransactionRepository(Usuario) usuarioRepository: Repository<Usuario>,
+                                                @TransactionRepository(Produto) produtoRepository: Repository<Produto>,
+                                                @TransactionRepository(CompraProduto) compraProdutoRepository: Repository<CompraProduto>){
+
+    
+       const usuario = await usuarioRepository.findOne(usuario_id);
+       
+
+       if(!usuario){
+           throw new NotFoundException({mensagem : 'usuario_id inválido'});           
+       }
+
+       for(let item of compraBody.items){
+            const produto = await produtoRepository.findOne(item.produto_id);
+
+            if(!produto){
+                throw new NotFoundException( {mensagem: `produto_id ${item.produto_id} inválido`});                
+            }
+       }
+
+       const data = (await manager.query(`select now()`))[0].now;
+
+       const codigo = crypto.randomBytes(20).toString('HEX');   
+        
+       const compra = await this.compraRepository.save({
+                                                            data : data,
+                                                            codigo : codigo,
+                                                            finalizada: false,
+                                                            usuario_id: usuario_id
+                                                        });
       
+        compraBody.items.map((item) =>{
+            item.compra_id = compra.id
+        });
+
+  
+        await compraProdutoRepository.createQueryBuilder()
+                                    .insert()
+                                    .into(CompraProduto)
+                                    .values(compraBody.items)
+                                    .execute();
+       
+        return compra;
     }
 
 

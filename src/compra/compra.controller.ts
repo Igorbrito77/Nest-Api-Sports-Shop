@@ -32,8 +32,8 @@ export class CompraController{
       })
       
     
-    async cadastrarCompra(@Body() cadastroCompraDto : CadastroCompraDto){
-        return await this.compraService.createCompra(cadastroCompraDto);
+    async cadastrarCompra(@Headers('usuario_id') usuario_id, @Body() cadastroCompraDto : CadastroCompraDto){
+        return await this.compraService.createCompra.apply(this.compraService, [usuario_id, cadastroCompraDto]);
     }
 
 }
