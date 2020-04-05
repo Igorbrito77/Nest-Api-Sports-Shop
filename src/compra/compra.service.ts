@@ -78,5 +78,26 @@ export class CompraService{
         return compra;
     }
 
+    @Transaction()
+    async finalizarCompra(id : number,  @TransactionManager() manager: EntityManager){
+
+      
+        const compra = await this.compraRepository.findOne({where : {id : id}});
+
+        if(!compra){
+           throw new NotFoundException({mensagem : 'compra_id inválido'});
+        }
+    
+        compra.data =  (await manager.query(`select now()`))[0].now;
+        compra.finalizada = true;
+    
+        await this.compraRepository.save(compra);
+
+        return 'Compra finalizada com sucesso.'
+        
+    }
+
+
+
 
 }

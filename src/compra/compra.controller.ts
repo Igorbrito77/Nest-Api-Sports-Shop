@@ -1,5 +1,5 @@
-import { Controller, Get, Header, Param, Headers, Post, Body } from "@nestjs/common";
-import { ApiTags, ApiHeader } from "@nestjs/swagger";
+import { Controller, Get, Header, Param, Headers, Post, Body, Patch } from "@nestjs/common";
+import { ApiTags, ApiHeader, ApiParam } from "@nestjs/swagger";
 import { CompraService } from "./compra.service";
 import { CadastroCompraDto } from "./CadastroCompra.dto";
 
@@ -31,9 +31,17 @@ export class CompraController{
         required: true
       })
       
-    
     async cadastrarCompra(@Headers('usuario_id') usuario_id, @Body() cadastroCompraDto : CadastroCompraDto){
         return await this.compraService.createCompra.apply(this.compraService, [usuario_id, cadastroCompraDto]);
     }
+
+
+    @Patch('/:id')
+    @ApiParam({name: 'id', required: true})
+
+    async finalizarCompra(@Param('id') id){
+        return await this.compraService.finalizarCompra.apply(this.compraService, [id]);
+    }
+
 
 }
