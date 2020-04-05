@@ -23,7 +23,7 @@ export class ProdutoService {
         }
 
         if(filtros.preco_maximo){
-            where.push('produto.preco > :preco_maximo');
+            where.push('produto.preco < :preco_maximo');
             parametros['preco_maximo'] = filtros.preco_maximo;
         }
 
@@ -33,7 +33,7 @@ export class ProdutoService {
         }
 
 
-        return {filtro_completo : where.join(' and'), parametros : parametros}
+        return {filtro_completo : where.join(' and '), parametros : parametros}
 
     }
 
