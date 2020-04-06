@@ -1,5 +1,6 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn, OneToMany } from 'typeorm';
 import { Categoria } from './categoria.entity';
+import { Produto } from './produto.entity';
 
 @Entity({ name: 'subcategoria', schema: 'public' })
 export class Subcategoria {
@@ -18,6 +19,9 @@ export class Subcategoria {
     @ManyToOne(type => Categoria, categoria => categoria.id)
     @JoinColumn({ name: 'categoria_id' })
     categoria: Categoria;
+
+    @OneToMany(type => Produto, produto => produto.subcategoria)
+    produto: Produto;
 
     constructor(partial: Partial<Subcategoria>) {
         Object.assign(this, partial);

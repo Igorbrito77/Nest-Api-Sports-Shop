@@ -23,10 +23,10 @@ export class SubcategoriaController {
       return await this.subcategoriaService.create.apply(this.subcategoriaService, [cadastroSubcategoriaDto]);
     }
 
-    // @Get('/:id')
-    // @ApiParam({name : 'id', required : true})
-    // async getProduto(@Param('id') id){
-    //     return await this.produtoService.getProduto(id);
-    // }
+    @Get('/:id')
+    @ApiParam({name : 'id', required : true})
+    async getCategoria(@Param('id') id){
+        return await this.subcategoriaService.get(id);
+    }
 
 }

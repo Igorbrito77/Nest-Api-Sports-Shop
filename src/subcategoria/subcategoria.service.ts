@@ -18,9 +18,23 @@ export class SubcategoriaService {
    
         return await this.subcategoriaRepository.createQueryBuilder('subcategoria')
                                                 .select('subcategoria.id, subcategoria.nome, categoria.nome as categoria')
-                                                .leftJoin('subcategoria.categoria', 'categoria')
+                                                .innerJoin('subcategoria.categoria', 'categoria')
                                                 .getRawMany();
     } 
+
+
+    async get (id : number){
+
+      return await this.subcategoriaRepository.createQueryBuilder('subcategoria')
+                                              .select(`subcategoria.id, subcategoria.nome, categoria.nome as categoria, 
+                                              array_agg(json_build_object('id', produto.id, 'nome', produto.nome)) as produtos`)
+                                              .innerJoin('subcategoria.categoria', 'categoria')
+                                              .leftJoin('subcategoria.produto', 'produto')
+                                              .where('subcategoria.id = :id', {id})
+                                              .groupBy('subcategoria.id,  subcategoria.nome, categoria.nome')
+                                              .getRawOne();
+    }
+
 
     @Transaction()
     async create(subcategoriaBody, @TransactionManager() manager: EntityManager, 
