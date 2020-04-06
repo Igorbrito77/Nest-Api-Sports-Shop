@@ -13,6 +13,9 @@ export class Usuario {
     @Column({length : 15})
     cpf : string
 
+    @Column({nullable: false, length : 12})
+    senha : string
+
     @Column({length : 30})
     email : string
 
