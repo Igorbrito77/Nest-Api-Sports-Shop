@@ -8,6 +8,7 @@ import { ProdutoMoule } from './produto/produto.module';
 import { CategoriaModule } from './categoria/categoria.module';
 import { SubcategoriaModule } from './subcategoria/subcategoria.module';
 import { CompraMoule } from './compra/compra.module';
+import { LoginModule } from './login/login.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { CompraMoule } from './compra/compra.module';
     }),
     CategoriaModule,
     CompraMoule,
+    LoginModule,
     PerfilModule,
     ProdutoMoule,
     SubcategoriaModule,

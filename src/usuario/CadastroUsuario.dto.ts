@@ -47,6 +47,10 @@ export class CadastroUsuarioDto{
 
     @ApiProperty({required : true})
     @IsString()
+    readonly senha : string
+
+    @ApiProperty({required : true})
+    @IsString()
     readonly email : string
 
     @ApiProperty({required : false})

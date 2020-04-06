@@ -41,7 +41,7 @@ export class UsuarioService {
     const query =   this.usuarioRepository.createQueryBuilder('usuario')
                                               .innerJoinAndSelect('usuario.perfil', 'perfil')
                                               .innerJoinAndSelect('usuario.endereco', 'endereco')
-                                              .select(` usuario.id, usuario.nome, perfil.nome AS perfil, usuario.cpf,                                               
+                                              .select(` usuario.id, usuario.nome, perfil.nome AS perfil, usuario.email,                                               
                                                         endereco.cidade, endereco.estado`)                                                       
                                               .orderBy('usuario.id', 'DESC')
                                               .where(filtro_completo , parametros);
@@ -72,14 +72,16 @@ export class UsuarioService {
         throw new NotFoundException({ mensagem: 'perfil_id inválido' });
       }
 
-
       const enderecoBody = usuarioBody.endereco;
   
       usuarioBody.created_at = (await manager.query(`select now()`))[0].now;
 
       const endereco = await manager.save(new Endereco(enderecoBody));
    
+      delete usuarioBody.endereco;
       usuarioBody.endereco_id = endereco.id;
+
+      console.log(usuarioBody);
 
       const usuario = await manager.save( new Usuario(usuarioBody));
 
