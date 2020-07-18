@@ -43,7 +43,7 @@ export class ProdutoService {
         const {filtro_completo, parametros} = this.retorna_filtragem(filtros);
 
         return await this.produtoRepository.createQueryBuilder('produto')
-                                            .select('produto.id , produto.nome, produto.preco, subcategoria.nome as subcategoria')
+                                            .select('produto.id , produto.nome, produto.preco, produto.foto_url, subcategoria.nome as subcategoria')
                                             .innerJoin('produto.subcategoria', 'subcategoria')
                                             .where(filtro_completo, parametros)
                                             .getRawMany();

@@ -29,6 +29,9 @@ export class Produto {
     @Column()
     deleted_at : Date
 
+    @Column()
+    foto_url : String
+
     @ManyToOne(type => Usuario, usuario => usuario.id)
     @JoinColumn({ name: 'usuario_id' })
     usuario: Usuario;
