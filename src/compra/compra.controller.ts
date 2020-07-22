@@ -20,8 +20,8 @@ export class CompraController{
       })
 
     async listCompras(@Headers('usuario_id') usuario_id){
-        console.log(usuario_id)
-        return await this.compraService.listCompra(usuario_id);
+
+        return await this.compraService.listCompra.apply(this.compraService, [usuario_id])
     }
 
     @Post('/')

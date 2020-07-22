@@ -11,20 +11,32 @@ const crypto = require('crypto');
 @Injectable()
 export class CompraService{
 
-    constructor( @InjectRepository(Compra)  private readonly compraRepository : Repository<Compra>){
+    constructor( @InjectRepository(Compra)  private readonly compraRepository : Repository<Compra>
+                ){
 
     }
 
-    async listCompra(usuario_id){
+    @Transaction()
+    async listCompra(usuario_id,  
+                    @TransactionRepository(Usuario) usuarioRepository : Repository<Usuario>){
 
+        const perfil_id = (await usuarioRepository.findOne(usuario_id)).perfil_id;
+
+        let filtro = '';
+        let parametros = {};
+
+        if(perfil_id !== 1){
+            filtro = 'compra.usuario_id = :usuario_id ';
+            parametros['usuario_id'] = usuario_id;
+        }
 
         return await this.compraRepository.createQueryBuilder('compra')
-        .select(`compra.id, compra.codigo, compra.data, compra.finalizada, SUM(produto.preco * compra_produto.quantidade) as valor_total,
-                array_agg(json_build_object('preco', produto.preco , 'quantidade', compra_produto.quantidade, 
-                    'produto', produto.nome )) AS itens`)
+                                            .select(`compra.id, compra.codigo, compra.data, compra.finalizada, SUM(produto.preco * compra_produto.quantidade) as valor_total,
+                                                    array_agg(json_build_object('preco', produto.preco , 'quantidade', compra_produto.quantidade, 
+                                                        'produto', produto.nome )) AS itens`)
                                             .innerJoin('compra.compras_produto', 'compra_produto')   
-                                            .innerJoin('compra_produto.produto', 'produto')
-                                            .where(`compra.usuario_id =  ${usuario_id}`)                                         
+                                            .innerJoin('compra_produto.produto', 'produto')                                            
+                                            .where(filtro, parametros)                                         
                                             .groupBy('compra.id')
                                             .getRawMany();
                                             
