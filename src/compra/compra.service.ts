@@ -36,7 +36,8 @@ export class CompraService{
                                                         'produto', produto.nome )) AS itens`)
                                             .innerJoin('compra.compras_produto', 'compra_produto')   
                                             .innerJoin('compra_produto.produto', 'produto')                                            
-                                            .where(filtro, parametros)                                         
+                                            .where(filtro, parametros)
+                                            .orderBy('compra.data', 'DESC')                                         
                                             .groupBy('compra.id')
                                             .getRawMany();
                                             
@@ -80,6 +81,10 @@ export class CompraService{
             item.compra_id = compra.id
         });
 
+
+        console.log(compraBody);
+
+        console.log(compraBody.items);
   
         await compraProdutoRepository.createQueryBuilder()
                                     .insert()

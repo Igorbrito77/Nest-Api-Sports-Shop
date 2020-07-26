@@ -9,6 +9,7 @@ import { CategoriaModule } from './categoria/categoria.module';
 import { SubcategoriaModule } from './subcategoria/subcategoria.module';
 import { CompraMoule } from './compra/compra.module';
 import { LoginModule } from './login/login.module';
+import { CarrinhoModule } from './carrinho/carrinho.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { LoginModule } from './login/login.module';
       logging: 'all',
     }),
     CategoriaModule,
+    CarrinhoModule,
     CompraMoule,
     LoginModule,
     PerfilModule,
