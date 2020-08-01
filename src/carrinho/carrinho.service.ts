@@ -32,7 +32,7 @@ export class CarrinhoService{
 
         return await this.compraRepository.createQueryBuilder('compra')
                                             .select(`compra.id, compra.data,  SUM(produto.preco * compra_produto.quantidade) as valor_total,
-                                                    array_agg(json_build_object('preco', produto.preco , 'quantidade', compra_produto.quantidade, 
+                                                    array_agg(json_build_object('preco', (produto.preco *  compra_produto.quantidade) , 'quantidade', compra_produto.quantidade, 
                                                         'nome', produto.nome, 'foto_url', produto.foto_url, 'id', produto.id )) AS produtos`)
                                             .innerJoin('compra.compras_produto', 'compra_produto')   
                                             .innerJoin('compra_produto.produto', 'produto')                                            
@@ -121,7 +121,15 @@ export class CarrinhoService{
         
     }
 
+    @Transaction()
+    async removerProdutoCarrinho(usuario_id: number, produto_id : number, @TransactionManager() manager: EntityManager,
+                                    @TransactionRepository(CompraProduto) compraProdutoRepository: Repository<CompraProduto>){
 
+        const compra = await this.compraRepository.findOne({usuario_id : usuario_id, finalizada: false});
 
+        await compraProdutoRepository.delete({compra_id: compra.id, produto_id : produto_id});   
+                                        
+        return 'Produto excluído do carrinho com sucesso.';
+    }
 
 }

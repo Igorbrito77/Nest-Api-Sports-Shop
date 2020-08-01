@@ -1,4 +1,4 @@
-import { Controller, Get, Header, Param, Headers, Post, Body, Patch, Query } from "@nestjs/common";
+import { Controller, Get, Header, Param, Headers, Post, Body, Patch,Delete, Query } from "@nestjs/common";
 import { ApiTags, ApiHeader, ApiParam, ApiQuery } from "@nestjs/swagger";
 import { CarrinhoService } from "./carrinho.service";
 
@@ -48,6 +48,18 @@ export class CarrinhoController{
 
     async alterarProdutoCarinho(@Param('id') id, @Headers('usuario_id') usuario_id, @Query('quantidade') quantidade){
         return await this.carrinhoService.alterarProdutoCarrinho.apply(this.carrinhoService, [usuario_id, id, quantidade]);
+    }
+
+    @Delete('/produto/:id')
+    @ApiHeader({
+        name: 'usuario_id',
+        description: 'Id do usuário logado',
+        required: true
+      })
+    @ApiParam({name: 'id', required: true})
+    
+    async removerProdutoCarinho(@Param('id') id, @Headers('usuario_id') usuario_id){
+        return await this.carrinhoService.removerProdutoCarrinho.apply(this.carrinhoService, [usuario_id, id]);
     }
 
 
