@@ -62,5 +62,17 @@ export class CarrinhoController{
         return await this.carrinhoService.removerProdutoCarrinho.apply(this.carrinhoService, [usuario_id, id]);
     }
 
+    @Get('/total-produtos')
+    @ApiHeader({
+        name: 'usuario_id',
+        description: 'Id do usuário logado',
+        required: true
+      })
+
+    async retornarTotalProdutos(@Headers('usuario_id') usuario_id){
+
+        return await this.carrinhoService.retornarTotalProdutos.apply(this.carrinhoService, [usuario_id])
+    }
+
 
 }

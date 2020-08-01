@@ -132,4 +132,19 @@ export class CarrinhoService{
         return 'Produto excluído do carrinho com sucesso.';
     }
 
+    @Transaction()
+    async retornarTotalProdutos(usuario_id: number, @TransactionManager() manager: EntityManager){
+
+
+        return await this.compraRepository.createQueryBuilder('compra')
+                                            .select(`count(compra_produto.id) AS total`)
+                                            .innerJoin('compra.compras_produto', 'compra_produto')                                       
+                                            .where(`compra.usuario_id = :usuario_id`, {usuario_id})
+                                            .andWhere('compra.finalizada IS FALSE')
+                                            .getRawOne();
+        
+                                        
+        return 'Produto excluído do carrinho com sucesso.';
+    }
+
 }
